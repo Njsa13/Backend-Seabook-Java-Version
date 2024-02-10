@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -37,16 +38,19 @@ public class User implements UserDetails {
     private String email;
 
     @Column(name = "is_verified_email", nullable = false, columnDefinition = "boolean default false")
-    private Boolean isVerifiedEmail;
+    private boolean isVerifiedEmail;
 
     @Column(name = "phone_number", nullable = false, unique = true)
     private String phoneNumber;
 
     @Column(name = "is_verified_phone_number", nullable = false, columnDefinition = "boolean default false")
-    private Boolean isVerifiedPhoneNumber;
+    private boolean isVerifiedPhoneNumber;
 
     @Enumerated(EnumType.STRING)
     private EnumRole role;
+
+    @Column(name = "last_login")
+    private LocalDateTime lastLogin;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -55,6 +59,10 @@ public class User implements UserDetails {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    private Set<Purchase> purchases;
+
+    @OneToMany(mappedBy = "user", cascade =  {CascadeType.REMOVE, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    private Set<Token> tokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

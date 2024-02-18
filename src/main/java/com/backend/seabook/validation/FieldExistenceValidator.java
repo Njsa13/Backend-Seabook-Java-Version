@@ -23,10 +23,10 @@ public class FieldExistenceValidator implements ConstraintValidator<FieldExisten
     }
 
     @Override
-    public boolean isValid(Object o, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(Object val, ConstraintValidatorContext constraintValidatorContext) {
         try {
             String sql = "SELECT COUNT(*) FROM " + tableName + " WHERE " + fieldName + "=" + "?";
-            int count = jdbcTemplate.queryForObject(sql, Integer.class, o);
+            int count = jdbcTemplate.queryForObject(sql, Integer.class, val);
             return shouldExist ? count > 0 : count == 0;
         } catch (Exception e) {
             log.error("Failed to check field exists");
